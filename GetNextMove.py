@@ -1,4 +1,5 @@
 
+import random
 from sys import argv
 import chess
 from optparse import OptionParser
@@ -27,14 +28,18 @@ if __name__ == "__main__":
     arg[3] = time_black
     arg[4] = bonus_time
     '''
-    newBoard = chess.Board()
-    print('start \n', newBoard)
-    newBoard.remove_piece_at(chess.A1)
+    fenString = argv[1]
+    newBoard = chess.Board(fenString)
+    moves = list(newBoard.legal_moves)
+    move = random.choice(moves)
+    print(move)
+    # print('start \n', newBoard)
+    # newBoard.remove_piece_at(chess.A1)
     
-    print('new board',newBoard)
+    # print('new board',newBoard)
 
-    #GetNextMove GM = GetNextMove(argv[1], argv[2], argv[3], argv[4])
-    GM = GetNextMove(newBoard.fen(),0,0,0)
-    GM.nextMove()
+    # #GetNextMove GM = GetNextMove(argv[1], argv[2], argv[3], argv[4])
+    # GM = GetNextMove(newBoard.fen(),0,0,0)
+    # GM.nextMove()
 
     #makeFile(options)
