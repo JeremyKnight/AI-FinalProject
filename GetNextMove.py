@@ -4,7 +4,10 @@ from sys import argv
 import chess
 from optparse import OptionParser
 
-
+def writeToFile(chessOutput):
+    f = open('last_move.txt','w')
+    f.write(str(chessOutput))
+    f.close()
 
 class GetNextMove:
     def __init__(self, fen, time_white, time_black, bonus_time):
@@ -32,7 +35,7 @@ if __name__ == "__main__":
     newBoard = chess.Board(fenString)
     moves = list(newBoard.legal_moves)
     move = random.choice(moves)
-    print(move)
+    writeToFile(move)
     # print('start \n', newBoard)
     # newBoard.remove_piece_at(chess.A1)
     
