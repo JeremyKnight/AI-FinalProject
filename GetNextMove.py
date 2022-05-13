@@ -6,7 +6,7 @@ from optparse import OptionParser
 from evaluation import evaluation
 
 def writeToFile(chessOutput):
-    f = open('last_move.txt','w')
+    f = open('../last_move.txt','w')
     f.write(str(chessOutput))
     f.close()
 
