@@ -1,13 +1,23 @@
 
+import logging
 import random
 from sys import argv
+import sys
+import traceback
 import chess
 from optparse import OptionParser
+import os
 
 def writeToFile(chessOutput):
     f = open('../last_move.txt','w')
     f.write(str(chessOutput))
     f.close()
+
+def debugWrite(chessOutput):
+    f = open('../../debug_output.txt','w')
+    f.write(str(chessOutput))
+    f.close()
+
 
 class GetNextMove:
     def __init__(self, fen, time_white, time_black, bonus_time):
@@ -31,11 +41,17 @@ if __name__ == "__main__":
     arg[3] = time_black
     arg[4] = bonus_time
     '''
-    fenString = argv[1]
-    newBoard = chess.Board(fenString)
-    moves = list(newBoard.legal_moves)
-    move = random.choice(moves)
-    writeToFile(move)
+    try:
+        fenString = argv[1] # Get the fenstring from tournament.py
+        debugWrite(fenString)
+        newBoard = chess.Board(fenString)
+        moves = list(newBoard.legal_moves)
+        move = random.choice(moves)
+        writeToFile(move)
+        sys.exit(0)
+    except Exception as e:
+        logging.error(traceback.format_exc())
+
     # print('start \n', newBoard)
     # newBoard.remove_piece_at(chess.A1)
     
