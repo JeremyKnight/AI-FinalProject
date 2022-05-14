@@ -65,12 +65,11 @@ kingstable = [
 -30,-40,-40,-50,-50,-40,-40,-30]
 
 class evaluation:
-    def __init__(self, board, color):
+    def __init__(self, board):
         self.board = board
-        self.color = color
     
     def evaluate(self):
-        print(self.board)
+        # print(self.board)
         
         #kingDanger = self.kingSafety(self.board.king(self.color))
 
@@ -166,16 +165,16 @@ class evaluation:
 
         
     
-    def inCheck(self, kingLoc):
-        print(kingLoc)
+    # def inCheck(self, kingLoc):
+    #     # print(kingLoc)
     
-        attackers = chess.Board.attackers(self.color, chess.square_name(kingLoc))
-        for a in attackers:
-            print("attackers attacking king",a)
-        return 0
+    #     attackers = chess.Board.attackers(self.color, chess.square_name(kingLoc))
+    #     for a in attackers:
+    #         print("attackers attacking king",a)
+    #     return 0
     
 
-    def kingSafety(self, kingLoc):
+    # def kingSafety(self, kingLoc):
         
-        return 0
+    #     return 0
 

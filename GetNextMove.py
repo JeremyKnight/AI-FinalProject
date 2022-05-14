@@ -1,4 +1,5 @@
 
+from asyncore import write
 import random
 from sys import argv
 import chess
@@ -11,23 +12,23 @@ def writeToFile(chessOutput):
     f.close()
 
 class GetNextMove:
-    def __init__(self, fen, time_white, time_black, bonus_time, color):
+    def __init__(self, fen, time_white, time_black, bonus_time):
         #print('fen from getNextMove init', fen)
         self.board = chess.Board(fen)
         #print(self.board)
         self.time_white = time_white
         self.time_black = time_black
         self.bonus_time = bonus_time
-        self.color = color
         #print("created a new GetNextMove")
     
     def nextMove(self):
         #chess.STARTING_FEN = self.board
         #print (self.board.legal_moves)
-        for i in range(1,100):
-            e = evaluation(self.board, self.color)
-            move = e.getBestAction()
-            self.board.push(move)
+        # for i in range(1,100):
+        e = evaluation(self.board)
+        move = e.getBestAction()
+        # self.board.push(move)
+        writeToFile(move)
 
         '''
         for i in range(1,100):
@@ -45,11 +46,10 @@ class GetNextMove:
         #print(self.board.legal_moves[1])
         
 
-def runTest():
+def runTest(fenString):
     #print("hello there")
     #fenString = "rnb1kbnr/ppp2ppp/2p1qp2/8/8/3P1P2/PPP2PPP/RNBQKBNR w KQkq - 0 1"
-    fenString = chess.STARTING_FEN
-    GM = GetNextMove(fenString,0,0,0, chess.WHITE)
+    GM = GetNextMove(fenString,0,0,0)
     GM.nextMove()
 
 if __name__ == "__main__":
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     arg[3] = time_black
     arg[4] = bonus_time
     '''
-    #fenString = argv[1]
+    fenString = argv[1]
     '''
     fenString = chess.STARTING_FEN
     newBoard = chess.Board(fenString)
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     writeToFile(move)
     '''
 
-    runTest()
+    runTest(fenString)
     
     # print('start \n', newBoard)
     # newBoard.remove_piece_at(chess.A1)
