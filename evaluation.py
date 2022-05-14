@@ -95,10 +95,10 @@ class evaluation:
             else:
                 return 9999
         if self.board.is_stalemate():
-            print("board stalemate")
+            #print("board stalemate")
             return 0
         if self.board.is_insufficient_material():
-            print("board has insufficient material")
+            #print("board has insufficient material")
             return 0
 
         wp = len(self.board.pieces(chess.PAWN, chess.WHITE))
@@ -113,39 +113,58 @@ class evaluation:
         bq = len(self.board.pieces(chess.QUEEN, chess.BLACK))
 
         material = 100*(wp-bp)+320*(wn-bn)+330*(wb-bb)+500*(wr-br)+900*(wq-bq)
-        print('material', material)
+        #print('material', material)
         pawnsq = sum([pawntable[i] for i in self.board.pieces(chess.PAWN, chess.WHITE)])
         pawnsq= pawnsq + sum([-pawntable[chess.square_mirror(i)] 
                                         for i in self.board.pieces(chess.PAWN, chess.BLACK)])
-        print('pawnsq',pawnsq)
+        #print('pawnsq',pawnsq)
         knightsq = sum([knightstable[i] for i in self.board.pieces(chess.KNIGHT, chess.WHITE)])
-        knightsq = knightsq + sum([-knightstable[chess.square_mirror(i)] 
+        knightsq = knightsq + sum([-knightstable[chess.square_mirror(i)]
                                         for i in self.board.pieces(chess.KNIGHT, chess.BLACK)])
-        print('knightsq',knightsq)
+        #print('knightsq',knightsq)
         bishopsq= sum([bishopstable[i] for i in self.board.pieces(chess.BISHOP, chess.WHITE)])
         bishopsq= bishopsq + sum([-bishopstable[chess.square_mirror(i)] 
                                         for i in self.board.pieces(chess.BISHOP, chess.BLACK)])
-        print('bishopsq',bishopsq)
-        rooksq = sum([rookstable[i] for i in self.board.pieces(chess.ROOK, chess.WHITE)]) 
+        #print('bishopsq',bishopsq)
+        rooksq = sum([rookstable[i] for i in self.board.pieces(chess.ROOK, chess.WHITE)])
         rooksq = rooksq + sum([-rookstable[chess.square_mirror(i)] 
                                         for i in self.board.pieces(chess.ROOK, chess.BLACK)])
-        print('rooksq',rooksq)
-        queensq = sum([queenstable[i] for i in self.board.pieces(chess.QUEEN, chess.WHITE)]) 
+        #print('rooksq',rooksq)
+        queensq = sum([queenstable[i] for i in self.board.pieces(chess.QUEEN, chess.WHITE)])
         queensq = queensq + sum([-queenstable[chess.square_mirror(i)] 
                                         for i in self.board.pieces(chess.QUEEN, chess.BLACK)])
-        print('queensq', queensq)
-        kingsq = sum([kingstable[i] for i in self.board.pieces(chess.KING, chess.WHITE)]) 
-        kingsq = kingsq + sum([-kingstable[chess.square_mirror(i)] 
+        #print('queensq', queensq)
+        kingsq = sum([kingstable[i] for i in self.board.pieces(chess.KING, chess.WHITE)])
+        kingsq = kingsq + sum([-kingstable[chess.square_mirror(i)]
                                         for i in self.board.pieces(chess.KING, chess.BLACK)])
-        print('kingsq', kingsq)
+        #print('kingsq', kingsq)
         eval = material + pawnsq + knightsq + bishopsq+ rooksq+ queensq + kingsq
-        print('evaluation:',eval)
+        #print('evaluation:',eval)
         if self.board.turn:
             return eval
         else:
             return -eval
 
+    def getBestAction(self):
+        #print("entering best Action")
+        bestA = None
+        maxU = -999999999
+        for i in self.board.legal_moves:
+            #print('legal move is',i)
+            self.board.push(i)
+            e = self.evaluate()
+            self.board.pop()
 
+            if e >maxU:
+                print('maxU changed from', maxU, 'to', e)
+                maxU = e
+                bestA = i
+
+        return bestA
+    
+    
+
+        
     
     def inCheck(self, kingLoc):
         print(kingLoc)
