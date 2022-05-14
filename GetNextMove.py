@@ -9,7 +9,7 @@ from optparse import OptionParser
 import os
 
 def writeToFile(chessOutput):
-    f = open('/last_move.txt','w')
+    f = open('./players/last_move.txt','w')
     f.write(str(chessOutput))
     f.close()
 
