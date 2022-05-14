@@ -1,4 +1,5 @@
 import chess
+import time
 
 #################################################
 # Table of positions found at: 
@@ -68,11 +69,15 @@ class evaluation:
     def __init__(self, board):
         self.board = board
     
+    def kingSafety(self, kingLoc):
+        
+        return 0
+    #def pieceCover(self, piece, color):
+        
+
     def evaluate(self):
         # print(self.board)
-        
         #kingDanger = self.kingSafety(self.board.king(self.color))
-
         '''
         kingLoc = None
         if self.color:
@@ -84,10 +89,16 @@ class evaluation:
         self.inCheck(chess.square_name(kingLoc))
         #for attackers in kingDanger:
             #print attackers
-            '''
+        '''
+        #ideas:
+        # be defensive around king
+        # be aggressive against enemy pieces of high value (king queen, rook, bishop, etc.)
+
+
         ####################################################
         #This code was found at https://medium.datadriveninvestor.com/an-incremental-evaluation-function-and-a-testsuite-for-computer-chess-6fde22aac137
         ######################################
+        print("checking board of: \n", self.board)
         if self.board.is_checkmate():
             if self.board.turn:
                 return -9999
@@ -100,49 +111,63 @@ class evaluation:
             #print("board has insufficient material")
             return 0
 
-        wp = len(self.board.pieces(chess.PAWN, chess.WHITE))
-        bp = len(self.board.pieces(chess.PAWN, chess.BLACK))
-        wn = len(self.board.pieces(chess.KNIGHT, chess.WHITE))
-        bn = len(self.board.pieces(chess.KNIGHT, chess.BLACK))
-        wb = len(self.board.pieces(chess.BISHOP, chess.WHITE))
-        bb = len(self.board.pieces(chess.BISHOP, chess.BLACK))
-        wr = len(self.board.pieces(chess.ROOK, chess.WHITE))
-        br = len(self.board.pieces(chess.ROOK, chess.BLACK))
-        wq = len(self.board.pieces(chess.QUEEN, chess.WHITE))
-        bq = len(self.board.pieces(chess.QUEEN, chess.BLACK))
+        wp = len(self.board.pieces(chess.PAWN, self.board.turn))
+        bp = len(self.board.pieces(chess.PAWN, not self.board.turn))
+        wn = len(self.board.pieces(chess.KNIGHT, self.board.turn))
+        bn = len(self.board.pieces(chess.KNIGHT, not self.board.turn))
+        wb = len(self.board.pieces(chess.BISHOP, self.board.turn))
+        bb = len(self.board.pieces(chess.BISHOP, not self.board.turn))
+        wr = len(self.board.pieces(chess.ROOK, self.board.turn))
+        br = len(self.board.pieces(chess.ROOK, not self.board.turn))
+        wq = len(self.board.pieces(chess.QUEEN, self.board.turn))
+        bq = len(self.board.pieces(chess.QUEEN, not self.board.turn))
 
         material = 100*(wp-bp)+320*(wn-bn)+330*(wb-bb)+500*(wr-br)+900*(wq-bq)
         #print('material', material)
-        pawnsq = sum([pawntable[i] for i in self.board.pieces(chess.PAWN, chess.WHITE)])
-        pawnsq= pawnsq + sum([-pawntable[chess.square_mirror(i)] 
-                                        for i in self.board.pieces(chess.PAWN, chess.BLACK)])
-        #print('pawnsq',pawnsq)
-        knightsq = sum([knightstable[i] for i in self.board.pieces(chess.KNIGHT, chess.WHITE)])
-        knightsq = knightsq + sum([-knightstable[chess.square_mirror(i)]
-                                        for i in self.board.pieces(chess.KNIGHT, chess.BLACK)])
-        #print('knightsq',knightsq)
-        bishopsq= sum([bishopstable[i] for i in self.board.pieces(chess.BISHOP, chess.WHITE)])
-        bishopsq= bishopsq + sum([-bishopstable[chess.square_mirror(i)] 
-                                        for i in self.board.pieces(chess.BISHOP, chess.BLACK)])
-        #print('bishopsq',bishopsq)
-        rooksq = sum([rookstable[i] for i in self.board.pieces(chess.ROOK, chess.WHITE)])
-        rooksq = rooksq + sum([-rookstable[chess.square_mirror(i)] 
-                                        for i in self.board.pieces(chess.ROOK, chess.BLACK)])
-        #print('rooksq',rooksq)
-        queensq = sum([queenstable[i] for i in self.board.pieces(chess.QUEEN, chess.WHITE)])
-        queensq = queensq + sum([-queenstable[chess.square_mirror(i)] 
-                                        for i in self.board.pieces(chess.QUEEN, chess.BLACK)])
-        #print('queensq', queensq)
-        kingsq = sum([kingstable[i] for i in self.board.pieces(chess.KING, chess.WHITE)])
+        pawnsq = sum([-pawntable[chess.square_mirror(i)] for i in self.board.pieces(chess.PAWN, not self.board.turn)])
+        for i in self.board.pieces(chess.PAWN, self.board.turn):
+            pawnsq += pawntable[i] - (2 * chess.square_distance(i,self.board.king(self.board.turn)))
+            #print(chess.square_distance(i,self.board.king(self.board.turn)))
+            #time.pause(1000)
+                                 
+        print('pawnsq',pawnsq)
+        
+        knightsq = sum([-knightstable[chess.square_mirror(i)] for i in self.board.pieces(chess.KNIGHT, not self.board.turn)])
+        #sum([knightstable[i] for i in self.board.pieces(chess.KNIGHT, self.board.turn)])
+        for i in self.board.pieces(chess.KNIGHT, self.board.turn):
+            knightsq += knightstable[i]
+
+        print('knightsq',knightsq)
+        bishopsq= sum([-bishopstable[i] for i in self.board.pieces(chess.BISHOP, not self.board.turn)])
+        #bishopsq= bishopsq + sum([-bishopstable[chess.square_mirror(i)] 
+        for i in self.board.pieces(chess.BISHOP, self.board.turn):
+            bishopsq += bishopstable[i] - (4 * chess.square_distance(i,self.board.king(self.board.turn)))
+
+        print('bishopsq',bishopsq)
+        rooksq = sum([-rookstable[i] for i in self.board.pieces(chess.ROOK, not self.board.turn)])
+        #rooksq = rooksq + sum([-rookstable[chess.square_mirror(i)]
+        for i in self.board.pieces(chess.ROOK, self.board.turn):
+            rooksq += rooksq - (4 * chess.square_distance(i,self.board.king(self.board.turn)))
+        print('rooksq',rooksq)
+        queensq = sum([queenstable[i] for i in self.board.pieces(chess.QUEEN, not self.board.turn)])
+        #queensq = queensq + sum([-queenstable[chess.square_mirror(i)] 
+        for i in self.board.pieces(chess.QUEEN, self.board.turn):
+            queensq += queensq - (5 * chess.square_distance(i,self.board.king(self.board.turn)))
+        print('queensq', queensq)
+        kingsq = sum([kingstable[i] for i in self.board.pieces(chess.KING, self.board.turn)])
+        
         kingsq = kingsq + sum([-kingstable[chess.square_mirror(i)]
-                                        for i in self.board.pieces(chess.KING, chess.BLACK)])
-        #print('kingsq', kingsq)
+                                        for i in self.board.pieces(chess.KING, not self.board.turn)])
+        
+        print('kingsq', kingsq)
         eval = material + pawnsq + knightsq + bishopsq+ rooksq+ queensq + kingsq
         #print('evaluation:',eval)
-        if self.board.turn:
-            return eval
-        else:
-            return -eval
+        #if self.board.turn:
+        #    return eval
+        #else:
+        #    return -eval
+        print("total: ",eval)
+        return eval
 
     def getBestAction(self):
         #print("entering best Action")
@@ -153,17 +178,13 @@ class evaluation:
             self.board.push(i)
             e = self.evaluate()
             self.board.pop()
-
+            
             if e >maxU:
-                print('maxU changed from', maxU, 'to', e)
+                #print('maxU changed from', maxU, 'to', e)
                 maxU = e
                 bestA = i
-
+        print(maxU)
         return bestA
-    
-    
-
-        
     
     # def inCheck(self, kingLoc):
     #     # print(kingLoc)

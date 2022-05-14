@@ -5,6 +5,7 @@ from sys import argv
 import chess
 from optparse import OptionParser
 from evaluation import evaluation
+import time
 
 def writeToFile(chessOutput):
     f = open('../last_move.txt','w')
@@ -25,10 +26,14 @@ class GetNextMove:
         #chess.STARTING_FEN = self.board
         #print (self.board.legal_moves)
         # for i in range(1,100):
-        e = evaluation(self.board)
-        move = e.getBestAction()
-        # self.board.push(move)
-        writeToFile(move)
+        for i in range(1,100):
+            print("ahhhhhhhhhhhhhhhhhhhh NEXT ACTION ahhhhhhhhhhhhhhhhhhhhhhhh")
+            e = evaluation(self.board)
+            move = e.getBestAction()
+            self.board.push(move)
+            print(self.board)
+            time.sleep(2)
+        #writeToFile(move)
 
         '''
         for i in range(1,100):
@@ -41,7 +46,6 @@ class GetNextMove:
             print("score from evaluation",score)
         '''
             
-
         #print(e)
         #print(self.board.legal_moves[1])
         
@@ -49,6 +53,7 @@ class GetNextMove:
 def runTest(fenString):
     #print("hello there")
     #fenString = "rnb1kbnr/ppp2ppp/2p1qp2/8/8/3P1P2/PPP2PPP/RNBQKBNR w KQkq - 0 1"
+    
     GM = GetNextMove(fenString,0,0,0)
     GM.nextMove()
 
@@ -59,7 +64,8 @@ if __name__ == "__main__":
     arg[3] = time_black
     arg[4] = bonus_time
     '''
-    fenString = argv[1]
+    #fenString = argv[1]
+    fenString = chess.STARTING_FEN
     '''
     fenString = chess.STARTING_FEN
     newBoard = chess.Board(fenString)
@@ -67,8 +73,9 @@ if __name__ == "__main__":
     move = random.choice(moves)
     writeToFile(move)
     '''
-
     runTest(fenString)
+    
+        
     
     # print('start \n', newBoard)
     # newBoard.remove_piece_at(chess.A1)
