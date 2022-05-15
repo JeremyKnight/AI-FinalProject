@@ -110,31 +110,29 @@ class evaluation:
         #if not pieceAt == None:
             #pieceAt = chess.piece_name(pieceAt)
         
-        print("piecAt",pieceAt)
+        # print("piecAt",pieceAt)
         score = 0
         #print(squareTo)
         if pieceAt == 'p' or pieceAt == 'P' :
-            print('from pawn')
+            # print('from pawn')
             score += pieceWeight[1]
         #knights cover
         elif pieceAt == 'k' or pieceAt == 'K' :
-            print('from knight')
+            # print('from knight')
             score += pieceWeight[2]
         #bishop cover
         elif pieceAt == 'b' or pieceAt == 'B' :
-            print('from bishop')
+            # print('from bishop')
             score += pieceWeight[3]
         #rook cover
         elif pieceAt == 'r' or pieceAt == 'R' :
-            print('from rook')
+            # print('from rook')
             score += pieceWeight[4]
         #queen cover
         elif pieceAt == 'q' or pieceAt == 'Q' :
-            print("queen covers")
+            # print("queen covers")
             score += pieceWeight[5]
-        else:
-            print("no piece here")
-        
+            
         self.board.push(move)
         return score
             #print('yay?')
@@ -164,7 +162,7 @@ class evaluation:
         ######################################
         #print(self.board)
         #self.board.push(move)
-        print("\n checking board of: \n", self.board)
+        # print("\n checking board of: \n", self.board)
         if self.board.is_checkmate():
             if self.board.turn:
                 return -9999
@@ -196,36 +194,36 @@ class evaluation:
             #print(chess.square_distance(i,self.board.king(self.board.turn)))
             #time.pause(1000)
                                  
-        print('pawnsq',pawnsq)
+        # print('pawnsq',pawnsq)
         
         knightsq = sum([-knightstable[chess.square_mirror(i)] for i in self.board.pieces(chess.KNIGHT, not self.board.turn)])
         #sum([knightstable[i] for i in self.board.pieces(chess.KNIGHT, self.board.turn)])
         for i in self.board.pieces(chess.KNIGHT, self.board.turn):
             knightsq += knightstable[i]
 
-        print('knightsq',knightsq)
+        # print('knightsq',knightsq)
         bishopsq= sum([-bishopstable[i] for i in self.board.pieces(chess.BISHOP, not self.board.turn)])
         #bishopsq= bishopsq + sum([-bishopstable[chess.square_mirror(i)] 
         for i in self.board.pieces(chess.BISHOP, self.board.turn):
             bishopsq += bishopstable[i] - (4 * chess.square_distance(i,self.board.king(self.board.turn)))
 
-        print('bishopsq',bishopsq)
+        # print('bishopsq',bishopsq)
         rooksq = sum([-rookstable[i] for i in self.board.pieces(chess.ROOK, not self.board.turn)])
         #rooksq = rooksq + sum([-rookstable[chess.square_mirror(i)]
         for i in self.board.pieces(chess.ROOK, self.board.turn):
             rooksq += rooksq - (4 * chess.square_distance(i,self.board.king(self.board.turn)))
-        print('rooksq',rooksq)
+        # print('rooksq',rooksq)
         queensq = sum([queenstable[i] for i in self.board.pieces(chess.QUEEN, not self.board.turn)])
         #queensq = queensq + sum([-queenstable[chess.square_mirror(i)] 
         for i in self.board.pieces(chess.QUEEN, self.board.turn):
             queensq += queensq - (5 * chess.square_distance(i,self.board.king(self.board.turn)))
-        print('queensq', queensq)
+        # print('queensq', queensq)
         kingsq = sum([kingstable[i] for i in self.board.pieces(chess.KING, self.board.turn)])
         
         kingsq = kingsq + sum([-kingstable[chess.square_mirror(i)]
                                         for i in self.board.pieces(chess.KING, not self.board.turn)])
         
-        print('kingsq', kingsq)
+        #print('kingsq', kingsq)
         eval = material + pawnsq + knightsq + bishopsq+ rooksq+ queensq + kingsq
         #print('evaluation:',eval)
         #if self.board.turn:
@@ -233,9 +231,9 @@ class evaluation:
         #else:
         #    return -eval
         attackOpportunity = self.attackopportunity(move)
-        print('attackOpportunity',attackOpportunity)
+        # print('attackOpportunity',attackOpportunity)
         eval += attackOpportunity
-        print("total: ",eval)
+        # print("total: ",eval)
         #self.board.pop()
         return eval
 
@@ -243,7 +241,7 @@ class evaluation:
         #print("entering best Action")
         bestA = None
         maxU = -999999999
-        print(self.board.legal_moves)
+        #print(self.board.legal_moves)
         
         for i in self.board.legal_moves:
             #print('legal move is',i)
