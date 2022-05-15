@@ -66,6 +66,9 @@ if __name__ == "__main__":
     '''
     #fenString = argv[1]
     fenString = chess.STARTING_FEN
+    #fenString = 'rnbqkbnr/pppppppp/PPPPPPP1/7P/8/8/8/RNBQKBNR b KQkq - 0 1'
+
+
     '''
     fenString = chess.STARTING_FEN
     newBoard = chess.Board(fenString)

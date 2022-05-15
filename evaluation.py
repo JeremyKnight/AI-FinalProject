@@ -5,6 +5,14 @@ import time
 # Table of positions found at: 
 # https://github.com/astoeckl/mediumchess/blob/master/Blog1.ipynb
 ##############################################################
+pieceWeight = [0,10,40,40,70,90,200]
+    # "pawn": 10,
+    # "knight": 40,
+    # "bishop": 40,
+    # "rook":70,
+    # "queen": 90,
+    # "king": 2000
+
 pawntable = [
  0,  0,  0,  0,  0,  0,  0,  0,
  5, 10, 10,-20,-20, 10, 10,  5,
@@ -66,16 +74,72 @@ kingstable = [
 -30,-40,-40,-50,-50,-40,-40,-30]
 
 class evaluation:
+    #this board is the previous board before the move
     def __init__(self, board):
+        #print(board)
         self.board = board
     
     def kingSafety(self, kingLoc):
         
         return 0
-    #def pieceCover(self, piece, color):
-        
+    '''
+    def pieceCover(self, piece, color, square):
+        #pawns cover
+        if piece == 1:
+            print('from pawn')
+        #knights cover
+        elif piece == 2:
+            print('from knight')
+        #bishop cover
+        elif piece == 3:
+            print('from bishop')
+        #rook cover
+        elif piece == 4:
+            print('from rook')
+        #queen cover
+        elif piece == 5:
+            print("queen covers")
+    '''
 
-    def evaluate(self):
+    #calcualtes the opportunity to attack the opponent
+    def attackopportunity(self, move):
+        move = self.board.pop()
+        squareTo = move.to_square #str(move)[:2], str(move)[2:]
+        pieceAt = str(self.board.piece_at(squareTo))
+        #print(pieceAt)
+        #if not pieceAt == None:
+            #pieceAt = chess.piece_name(pieceAt)
+        
+        print("piecAt",pieceAt)
+        score = 0
+        #print(squareTo)
+        if pieceAt == 'p' or pieceAt == 'P' :
+            print('from pawn')
+            score += pieceWeight[1]
+        #knights cover
+        elif pieceAt == 'k' or pieceAt == 'K' :
+            print('from knight')
+            score += pieceWeight[2]
+        #bishop cover
+        elif pieceAt == 'b' or pieceAt == 'B' :
+            print('from bishop')
+            score += pieceWeight[3]
+        #rook cover
+        elif pieceAt == 'r' or pieceAt == 'R' :
+            print('from rook')
+            score += pieceWeight[4]
+        #queen cover
+        elif pieceAt == 'q' or pieceAt == 'Q' :
+            print("queen covers")
+            score += pieceWeight[5]
+        else:
+            print("no piece here")
+        
+        self.board.push(move)
+        return score
+            #print('yay?')
+
+    def evaluate(self, move):
         # print(self.board)
         #kingDanger = self.kingSafety(self.board.king(self.color))
         '''
@@ -98,7 +162,9 @@ class evaluation:
         ####################################################
         #This code was found at https://medium.datadriveninvestor.com/an-incremental-evaluation-function-and-a-testsuite-for-computer-chess-6fde22aac137
         ######################################
-        print("checking board of: \n", self.board)
+        #print(self.board)
+        #self.board.push(move)
+        print("\n checking board of: \n", self.board)
         if self.board.is_checkmate():
             if self.board.turn:
                 return -9999
@@ -122,7 +188,7 @@ class evaluation:
         wq = len(self.board.pieces(chess.QUEEN, self.board.turn))
         bq = len(self.board.pieces(chess.QUEEN, not self.board.turn))
 
-        material = 100*(wp-bp)+320*(wn-bn)+330*(wb-bb)+500*(wr-br)+900*(wq-bq)
+        material = (100/2)*(wp-bp)+(320/2)*(wn-bn)+(330/2)*(wb-bb)+(500/2)*(wr-br)+(900/2)*(wq-bq)
         #print('material', material)
         pawnsq = sum([-pawntable[chess.square_mirror(i)] for i in self.board.pieces(chess.PAWN, not self.board.turn)])
         for i in self.board.pieces(chess.PAWN, self.board.turn):
@@ -166,24 +232,30 @@ class evaluation:
         #    return eval
         #else:
         #    return -eval
+        attackOpportunity = self.attackopportunity(move)
+        print('attackOpportunity',attackOpportunity)
+        eval += attackOpportunity
         print("total: ",eval)
+        #self.board.pop()
         return eval
 
     def getBestAction(self):
         #print("entering best Action")
         bestA = None
         maxU = -999999999
+        print(self.board.legal_moves)
+        
         for i in self.board.legal_moves:
             #print('legal move is',i)
             self.board.push(i)
-            e = self.evaluate()
+            e = self.evaluate(i)
             self.board.pop()
             
             if e >maxU:
                 #print('maxU changed from', maxU, 'to', e)
                 maxU = e
                 bestA = i
-        print(maxU)
+        #print(maxU)
         return bestA
     
     # def inCheck(self, kingLoc):
