@@ -2,6 +2,9 @@ from fitnessFunct import *
 from genetic_algo import *
 from eval import *
 
+
+
+#code from https://github.com/victorsimrbt/chess_mc_ga
 eval_model = simple_eval()
 tourno_fitness = fitness
 
