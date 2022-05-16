@@ -11,6 +11,7 @@ def writeToFile(chessOutput):
     f = open('./players/last_move.txt','w')
     f.write(str(chessOutput))
     f.close()
+    # print("ZJminMax Writing to File")
 
 class GetNextMove:
     def __init__(self, fen, time_white, time_black, bonus_time):
@@ -26,14 +27,14 @@ class GetNextMove:
         #chess.STARTING_FEN = self.board
         #print (self.board.legal_moves)
         # for i in range(1,100):
-        for i in range(1,100):
-            print("ahhhhhhhhhhhhhhhhhhhh NEXT ACTION ahhhhhhhhhhhhhhhhhhhhhhhh")
-            e = evaluation(self.board)
-            move = e.getBestAction()
-            self.board.push(move)
-            print(self.board)
-            time.sleep(2)
-        #writeToFile(move)
+        # for i in range(1,100):
+            # print("ahhhhhhhhhhhhhhhhhhhh NEXT ACTION ahhhhhhhhhhhhhhhhhhhhhhhh")
+        e = evaluation(self.board)
+        move = e.getBestAction()
+        self.board.push(move)
+        # print(self.board)
+            # time.sleep(2)
+        writeToFile(move)
 
         '''
         for i in range(1,100):
@@ -64,8 +65,8 @@ if __name__ == "__main__":
     arg[3] = time_black
     arg[4] = bonus_time
     '''
-    #fenString = argv[1]
-    fenString = chess.STARTING_FEN
+    fenString = argv[1]
+    # fenString = "rnbqkbnr/pppppppp/8/8/6P1/8/PPPPPP1P/RNBQKBNR b KQkq - 0 1"
     #fenString = 'rnbqkbnr/pppppppp/PPPPPPP1/7P/8/8/8/RNBQKBNR b KQkq - 0 1'
 
 
