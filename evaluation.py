@@ -102,19 +102,14 @@ class evaluation:
     '''
 
     #calcualtes the opportunity to attack the opponent
-    def attackopportunity(self, move):
+    def attackopportunity(self):
         move = self.board.pop()
         squareTo = move.to_square #str(move)[:2], str(move)[2:]
         pieceAt = str(self.board.piece_at(squareTo))
-        #print(pieceAt)
-        #if not pieceAt == None:
-            #pieceAt = chess.piece_name(pieceAt)
-        
-        # print("piecAt",pieceAt)
         score = 0
         #print(squareTo)
-        if pieceAt == 'p' or pieceAt == 'P' :
-            # print('from pawn')
+        if pieceAt == 'p' or pieceAt == 'P':
+            print('from pawn')
             score += pieceWeight[1]
         #knights cover
         elif pieceAt == 'k' or pieceAt == 'K' :
@@ -136,6 +131,10 @@ class evaluation:
         self.board.push(move)
         return score
             #print('yay?')
+
+    def enemyReflex(self,move):
+        movePlace = self.board.move
+        print("yay?")
 
     def evaluate(self, move):
         # print(self.board)
@@ -230,8 +229,8 @@ class evaluation:
         #    return eval
         #else:
         #    return -eval
-        attackOpportunity = self.attackopportunity(move)
-        # print('attackOpportunity',attackOpportunity)
+        attackOpportunity = self.attackopportunity()*5
+        print('attackOpportunity',attackOpportunity)
         eval += attackOpportunity
         # print("total: ",eval)
         #self.board.pop()
